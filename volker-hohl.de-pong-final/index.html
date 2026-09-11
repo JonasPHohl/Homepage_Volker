@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="www.volker-hohl.de – persönliche Website">
+<title>www.volker-hohl.de – Home</title>
+<link rel="stylesheet" href="assets/css/style.css">
+
+<style id="pong-fullscreen-style">
+/* Im Fullscreen bleibt ausschließlich das Pong-Spiel sichtbar. */
+body.pong-fullscreen-active {
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+body.pong-fullscreen-active > *:not(#pong-fullscreen-stage) {
+  display: none !important;
+}
+#pong-fullscreen-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: #000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+body.pong-fullscreen-active #pong-fullscreen-stage {
+  display: flex !important;
+}
+#pong-fullscreen-stage canvas {
+  display: block;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: auto;
+  height: auto;
+}
+#pong-fullscreen-back {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 1000000;
+  display: none;
+  padding: 9px 14px;
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 10px;
+  background: rgba(0,0,0,.7);
+  color: white;
+  font: 600 14px system-ui,sans-serif;
+  cursor: pointer;
+}
+body.pong-fullscreen-active #pong-fullscreen-back {
+  display: block;
+}
+</style>
+
+</head>
+<body>
+<header><div class="site nav"><a class="brand" href="index.html">www.<span>volker-hohl.de</span></a><nav><a href="index.html">Home</a><a href="index/index.html">Links</a><a href="downloads/Pong_made_by_Jonas/index.html">Pong</a><a href="meine%20Bilder/index.html" class="">Meine Bilder</a><a href="Impressum/index.html">Impressum</a></nav></div></header>
+<main class="site"><section class="hero">
+<img src="assets/images/Banner.jpg" alt="Willkommen bei volker-hohl.de">
+<div class="hero-content">
+<div class="eyebrow">Willkommen</div>
+<h1>www.volker-hohl.de</h1>
+<p class="lead">Herzlich Willkommen auf der persönlichen Website von Volker Hohl.</p>
+</div></section>
+<section class="section">
+<div class="eyebrow">Startseite</div>
+<h2>Schön, dass Sie hier sind.</h2>
+<div class="grid">
+<a class="card" href="index/index.html"><div class="card-icon">🔗</div><h2>Links</h2><p>Weiter zu den Links und weiteren Inhalten der Website.</p></a>
+<a class="card" href="meine%20Bilder/index.html"><div class="card-icon">📸</div><h2>Meine Bilder</h2><p>Fotogalerie mit den Bildern aus dem Bilderordner.</p></a>
+<a class="card" href="downloads/Pong_made_by_Jonas/index.html"><div class="card-icon">🎮</div><h2>Pong</h2><p>Das kleine Pong-Spiel „made by Jonas“ direkt im Browser starten.</p></a>
+</div>
+</section></main>
+<footer class="site"><span>© 1999–2024 Volker Hohl, Jettingen</span><a href="Impressum/index.html">Impressum</a></footer>
+
+<script id="pong-fullscreen-script">
+(function () {
+  const canvas = document.querySelector('canvas');
+  if (!canvas) return;
+
+  const stage = document.createElement('div');
+  stage.id = 'pong-fullscreen-stage';
+
+  const back = document.createElement('button');
+  back.id = 'pong-fullscreen-back';
+  back.type = 'button';
+  back.textContent = '← Zurück';
+  back.addEventListener('click', leaveFullscreen);
+
+  // Das Canvas wird im normalen Modus nicht verändert; im Fullscreen liegt
+  // es in einer eigenen schwarzen Bühne.
+  document.body.appendChild(stage);
+  document.body.appendChild(back);
+
+  function enterFullscreen() {
+    stage.appendChild(canvas);
+    document.body.classList.add('pong-fullscreen-active');
+    if (stage.requestFullscreen) {
+      stage.requestFullscreen().catch(function () {});
+    }
+  }
+
+  function leaveFullscreen() {
+    document.body.classList.remove('pong-fullscreen-active');
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen().catch(function () {});
+    }
+  }
+
+  document.addEventListener('fullscreenchange', function () {
+    if (!document.fullscreenElement) {
+      document.body.classList.remove('pong-fullscreen-active');
+    }
+  });
+
+  // Vorhandene Fullscreen-/Vollbild-Buttons verwenden.
+  document.querySelectorAll('button, a').forEach(function (el) {
+    const text = (el.textContent || '').trim().toLowerCase();
+    if (text.includes('fullscreen') || text.includes('vollbild') ||
+        text.includes('ganzer bildschirm')) {
+      el.addEventListener('click', function (event) {
+        event.preventDefault();
+        enterFullscreen();
+      });
+    }
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') leaveFullscreen();
+  });
+})();
+</script>
+
+</body></html>
